@@ -1,0 +1,13 @@
+body {
+    background-color: #cbb746;
+}
+
+.login-card {
+    background-color: #f4ebb7;
+    border-radius: .75em;
+}
+
+.form-group {
+    margin: auto;
+    text-align: center;
+}
