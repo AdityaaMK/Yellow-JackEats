@@ -35,23 +35,17 @@ class orders(db.Model, UserMixin):
     #     self.email = email
     #     self.password = password
 
-class RegisterForm(Flask):
-    email = StringField(validators=[InputRequired(), Length(min=4, max=20)])
-
+class PlaceOrder(FlaskForm):
+    food = StringField(validators=[InputRequired(), Length(min=4, max=20)])
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/register")
-def register():
-    pass
-    
-
-@app.route("/login")
-def login():
+@app.route("/order")
+def order():
+    PlaceOrder()
     return render_template("login.html")
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

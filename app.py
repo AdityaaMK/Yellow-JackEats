@@ -38,6 +38,8 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(100), nullable = False)
     email = db.Column(db.String(100), nullable = False, unique=True)
     password = db.Column(db.String(100), nullable = False)
+    def get_id(self):
+        return(self._id)
 
     # def __init__(self, email, password):
     #     self.email = email
@@ -54,7 +56,6 @@ class RegisterForm(FlaskForm):
             raise ValidationError("That email exists already. Please choose a different one.")
 
 class LoginForm(FlaskForm):
-    name = StringField(validators=[InputRequired(), Length(min=4, max=50)], render_kw = {"placeholder":"Name"})
     email = StringField(validators=[InputRequired(), Length(min=4, max=30)], render_kw = {"placeholder":"Email"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kw = {"placeholder":"Password"})
     submit = SubmitField("Login")
@@ -62,12 +63,6 @@ class LoginForm(FlaskForm):
 @app.route("/")
 def index():
     return render_template("index.html")
-
-@app.route("/dashboard", methods=['GET, POST'])
-@login_required
-def dashboard():
-    return render_template("home.html")
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -88,13 +83,13 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    print(form.errors)
+    print(form.validate_on_submit())
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for('dashboard'))
+                return redirect(url_for('order'))
  
     return render_template("login.html", form=form)
 
@@ -102,10 +97,11 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))@app.route("/order", methods=["GET", "POST"])
-def order():
-    return redirect(url_for('checkout'))
+    return redirect(url_for('login'))
 
+@app.route('/order', methods=['GET', 'POST'])
+def order():
+    return render_template("order.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
