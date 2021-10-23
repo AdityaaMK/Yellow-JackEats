@@ -11,6 +11,18 @@ body {
     border-radius: .75em;
 }
 
+.order-card {
+    border-radius: .75em;
+}
+
+.order-card-title, .order-card-subtitle {
+    display:inline;
+}
+
+.order-card-text {
+    margin-bottom: 0;
+}
+
 .form-group {
     margin: auto;
     text-align: center;

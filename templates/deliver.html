@@ -1,73 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- <style>
-    .container {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-/* Hide the browser's default checkbox */
-.container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-/* Create a custom checkbox */
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 25px;
-  width: 25px;
-  background-color: #eee;
-}
-
-/* On mouse-over, add a grey background color */
-.container:hover input ~ .checkmark {
-  background-color: #ccc;
-}
-
-/* When the checkbox is checked, add a blue background */
-.container input:checked ~ .checkmark {
-  background-color: #2196F3;
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-/* Show the checkmark when checked */
-.container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-/* Style the checkmark/indicator */
-.container .checkmark:after {
-  left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-</style> -->
 <head>
     <title>Yellow JackEats - Deliver</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -98,50 +30,75 @@
                   </ul>
                   <br>
                   <h1 class="card-title text-center"> Deliver Food! </h1>
-                    <br>
-                    <form action='/checkout'; method="post">
-                        <div class="checkbox menu">
-                            <label class="container">One
+                  <br>
+                  <form action='/deliver'; method="post">
+                      <div class="dropdown">
+                          <btn class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Filter Pickup Locations
+                          </btn>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item">
+                              <label class="container">One
                                 <input type="checkbox" checked="checked">
                                 <span class="checkmark"></span>
                               </label>
-                              
+                            </a>
+                            <a class="dropdown-item">
                               <label class="container">Two
-                                <input type="checkbox">
+                                <input type="checkbox" checked="checked">
                                 <span class="checkmark"></span>
                               </label>
-                              
+                            </a>
+                            <a class="dropdown-item">
                               <label class="container">Three
-                                <input type="checkbox">
+                                <input type="checkbox" checked="checked">
                                 <span class="checkmark"></span>
                               </label>
-                              
-                              <label class="container">Four
-                                <input type="checkbox">
-                                <span class="checkmark"></span>
-                              </label>
+                            </a>
+                          </div>
+                      </div>
+                      <br>
+                  </form>
+
+                  <div class="card mt-2 order-card">
+                    <div class="row g-0">
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h4 class="card-title order-card-title" style="display:inline-block"> Britain Dining Hall <h5 class = "order-card-subtitle"> (Shram) </h5></h4>
+                          <p class="order-card-text"> <b> Food: </b> Cheesecake, Ice Cream, Other Cheesecake, Pizza, Hamburger, Salad</p>
                         </div>
-                        <div class="dropdown">
-                            <btn class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Select Location
-                            </btn>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                              <a class="dropdown-item" href="#">North Ave</a>
-                              <a class="dropdown-item" href="#">Brittain</a>
-                              <a class="dropdown-item" href="#">Willage</a>
-                              <a class="dropdown-item" href="#">Willage</a>
-                              <a class="dropdown-item" href="#">Willage</a>
-                              <a class="dropdown-item" href="#">Willage</a>
-                              <a class="dropdown-item" href="#">Willage</a>
-                            </div>
-                        </div>
-                        <br>
-                        <form action="/confirmation" method="post">
-                          <div class="d-flex justify-content-center">
+                      </div>
+
+                      <div class="col-md-4 align-self-center">
+                        <form action="/deliver" method="post">
+                          <div class="d-flex justify-content-center m-2">
                               <button type="submit" class="btn btn-outline-dark btn-lg">Accept Delivery</button>
                           </div>
-                      </form>
-                    </form>
+                        </form>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div class="card mt-2 order-card">
+                    <div class="row g-0">
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h4 class="card-title order-card-title" style="display:inline-block"> Whole Foods <h5 class = "order-card-subtitle"> (Sreeram) </h5></h4>
+                        <p class="order-card-text"> <b> Food: </b> Who Knows </p>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4 align-self-center">
+                        <form action="/deliver" method="post">
+                          <div class="d-flex justify-content-center m-2">
+                              <button type="submit" class="btn btn-outline-dark btn-lg">Accept Delivery</button>
+                          </div>
+                        </form>
+                      </div>
+
+                    </div>
+                  </div>             
                 </div>
             </div>
         </div>
