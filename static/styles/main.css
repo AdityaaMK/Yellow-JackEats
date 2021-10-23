@@ -2,6 +2,10 @@ body {
     background-color: #cbb746;
 }
 
+.btn-outline-dark {
+    background-color: white;
+}
+
 .login-card {
     background-color: #f4ebb7;
     border-radius: .75em;
