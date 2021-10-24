@@ -144,6 +144,11 @@ def order():
                 user.food = ','.join(map(str, food_list))
                 user.loc = loc
                 db.session.commit()
+                query = db.session.query(User)
+                print(query)
+                display = []
+                for user in query:
+                    print("Food:  "+user.food)
                 # session.commit()
                 print("Food List: ", food_list)
                 print("Food List2: ", user.food)
