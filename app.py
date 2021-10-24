@@ -7,6 +7,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 from get_menu import *
+from send_sms import sendMessage
 
 app = Flask(__name__)
 app.secret_key = "top secret"
@@ -240,6 +241,10 @@ def deliver_details():
                 if email == x.get("email"):
                     x["deliverer_name"] = session["name"]
                     x["deliverer_phone"] = session["phone"]
+                    try:
+                        sendMessage(x["deliverer_name"] + " will be delivering your order shortly!", x.get("phone_number"))
+                    except:
+                        print("Message failed . . .")
                     delivery_order = x
         return render_template("deliver_details.html", order=delivery_order)
     return redirect(url_for('login'))
