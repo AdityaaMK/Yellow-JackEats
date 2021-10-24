@@ -11,7 +11,7 @@ from get_menu import *
 app = Flask(__name__)
 app.secret_key = "top secret"
 # users is the name of table we are referencing 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database3.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # run "from app import db" and then "db.create_all()"
@@ -23,11 +23,11 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app) 
 login_manager.login_view = 'login'
+allOrderDisplay = []
 
 @app.before_request
 def make_session_permanent():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=10)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -44,7 +44,11 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(100), nullable = False)
     phone = db.Column(db.String(100), nullable=False)
     food = db.Column(db.String(300))
-    loc = db.Column(db.String(100))
+    from_loc = db.Column(db.String(100))
+    to_loc = db.Column(db.String(100))
+    deliverer_name = db.Column(db.String(100))
+    deliverer_phone = db.Column(db.String(100))
+    
     def get_id(self):
         return(self._id)
 
@@ -82,13 +86,12 @@ def register():
     if form.validate_on_submit():
         #hash password to encrypt it
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(name=form.name.data, email=form.email.data, password=hashed_password, phone=form.phone.data, food="", loc="")
+        new_user = User(name=form.name.data, email=form.email.data, password=hashed_password, phone=form.phone.data, food="", from_loc="", to_loc="", deliverer_name="", deliverer_phone="")
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
 
     return render_template("register.html", form=form)
-    
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -99,6 +102,8 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
+                session['name'] = user.name
+                session['phone']=user.phone
                 session['logged_in']=True
                 session['email']=form.email.data
                 return redirect(url_for('home'))
@@ -127,28 +132,55 @@ def order():
         user = User.query.filter_by(email=session['email'])
         if request.method == "POST":
             data = dict(request.form)
-            loc = data.pop("loc")
-            food_list = list(data.keys())
-            if (not food_list): 
-                print("Location: ", loc)
+            from_loc = data.pop("from_loc")
+            if (not list(data.keys())): 
+                print("Location: ", from_loc)
                 try:
-                    foods = get_menu(request.form.get("loc"), "lunch")
+                    foods = get_menu(request.form.get("from_loc"), "lunch")
                     if foods:
-                        return render_template("order.html", loc=loc, foods=foods)
+                        return render_template("order.html", from_loc=from_loc, foods=foods)
                 except:
-                    return render_template("order.html", loc=loc)
+                    return render_template("order.html", from_loc=from_loc)
             else:
-                print("Location: ", loc)
-                session['food_list'] = food_list
-                session['loc'] = loc
-                user.food = ','.join(map(str, food_list))
-                user.loc = loc
-                db.session.commit()
-                # session.commit()
-                print("Food List: ", food_list)
-                print("Food List2: ", user.food)
+                to_loc = data.pop('to_loc')
+                food_list = list(data.keys())
+                # print("Location: ", loc)
+                # session['food_list'] = food_list
+                # session['loc'] = loc
+                # user.food = ','.join(map(str, food_list))
+                # user.from_loc = loc
+                # user.to_loc = to_loc
+                # new_user = User(name=session['name'], email=user.email.data, password=user.password.data, phone=user.phone.data, food=user.food.data, from_loc="", to_loc="", deliverer_name="", deliverer_phone="")
+                # User.query.filter_by(email=session['email']).delete()  
+                # db.session.commit()              
+                # db.session.add(new_user)
+                query = db.session.query(User)
+                # print(query)
+                orderDisplay = {}
+                locationConversions = {"blue-donkey":"Blue Donkey",
+                    "brittain":"Brittain",
+                    "chick-fil-a":"Chick Fil",
+                    "wing-zone":"Wing Zone",
+                    "kaldis-coffee":"Kaldis Coffee", 
+                    "panda-express":"Panda Express", 
+                    "north-ave-dining":"North Ave",
+                    "ramblin-coffee-sweets":"Ramblin Coffee Sweets",
+                    "rising-roll":"Rising Roll",
+                    "the-dive":"The Dive",
+                    "twisted-taco": "Twisted Taco",
+                    "west-village":"Willage"}
+                for x in query:
+                    if x.email == session['email']:
+                        orderDisplay = {'name':x.name, 'email':x.email, 'phone_number':x.phone, 'food':food_list, 'to_loc':to_loc, 'from_loc':locationConversions.get(from_loc), 'payment':"$2", 'deliverer_name':"TBA", 'deliverer_phone':"TBA"}
+                        allOrderDisplay.append({'name':x.name, 'email':x.email, 'phone_number':x.phone, 'food':food_list, 'to_loc':to_loc, 'from_loc':locationConversions.get(from_loc), 'payment':"$2", 'deliverer_name':"TBA", 'deliverer_phone':"TBA"})
+                # for entry in orderDisplay:
+                #     if entry['email'] == session['email']:
+                #         entry['food'] = food_list
+                #         entry['loc'] = to_loc
+                session['orderDisplay'] = orderDisplay
+                print(session['orderDisplay'])
+                print(allOrderDisplay)
                 return redirect(url_for('checkout'))
-
         return render_template("order.html")
     return redirect(url_for('login'))
 
@@ -158,38 +190,30 @@ def checkout():
     if session.get('logged_in'):
         if request.method == "POST":
             return redirect(url_for('order_details'))
-        return render_template("checkout.html")
+        print("ORDERS: ", session['orderDisplay'])
+        return render_template("checkout.html", orders=session['orderDisplay'])
     return redirect(url_for('login'))
 
 @app.route('/order_details', methods=['GET', 'POST'])
 @login_required
 def order_details():
     if session.get('logged_in'):
-        return render_template("order_details.html")
+        email = session["email"]
+        order = {}
+        for x in allOrderDisplay:
+            if email == x.get("email"):
+                order = x
+        # return render_template("order_details.html", orders=session['orderDisplay'])
+        return render_template("order_details.html", orders=order)
     return redirect(url_for('login'))
 
 @app.route('/deliver', methods=['GET', 'POST'])
 @login_required
 def deliver():
-    print(session.get('logged_in'))
     if session.get('logged_in'):
-        query = db.session.query(User)
-        print(query)
-        display = []
-        for user in query:
-            i = 0
-            print("Food:  "+user.food)
-            print('test1')
-            display.append([{'name':user.name}, {'food':user.food}, {'loc':user.loc}])
-            if user.food != "":
-                print('test')
-                display.append([{'name':user.name}, {'food':user.food}, {'loc':user.loc}])
-                i += 1
-        print("hi")
-        print(display)
         if request.method == "POST":
             return redirect(url_for('confirmation'))
-        return render_template("deliver.html")
+        return render_template("deliver.html", orders=allOrderDisplay)
     return redirect(url_for('login'))
 
 @app.route('/confirmation', methods=['GET', 'POST'])
@@ -197,18 +221,28 @@ def deliver():
 def confirmation():
     if session.get('logged_in'):
         if request.method == "POST":
-            return redirect(url_for('deliver_details'))
-        return render_template("confirmation.html")
+            email = request.form.get('email')
+            delivery_order = {}
+            for x in allOrderDisplay:
+                if email == x.get("email"):
+                    delivery_order = x
+        return render_template("confirmation.html", order=delivery_order)
     return redirect(url_for('login'))
 
 @app.route('/deliver_details', methods=['GET', 'POST'])
 @login_required
 def deliver_details():
     if session.get('logged_in'):
-        return render_template("deliver_details.html")
+        if request.method == "POST":
+            email = request.form.get('email')
+            delivery_order = {}
+            for x in allOrderDisplay:
+                if email == x.get("email"):
+                    x["deliverer_name"] = session["name"]
+                    x["deliverer_phone"] = session["phone"]
+                    delivery_order = x
+        return render_template("deliver_details.html", order=delivery_order)
     return redirect(url_for('login'))
-
-
 
 @app.route("/analytics")
 def analytics():

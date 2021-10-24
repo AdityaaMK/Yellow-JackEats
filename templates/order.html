@@ -16,13 +16,13 @@
                             <a class="nav-link" aria-current="page" href="/home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="/order">Order</a>
+                            <a class="nav-link active" href="/order">1. Order</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled">Checkout</a>
+                            <a class="nav-link disabled">2. Checkout</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled">Details</a>
+                            <a class="nav-link disabled">3. Details</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/logout">Logout</a>
@@ -31,30 +31,28 @@
                     <br>
                     <h1 class="card-title text-center"> Order Food! </h1>
                     <br>
-
                     <form action="/order" method="post" id="loc_form">
-                        <select name="loc" id="loc" class="form-select" aria-label="Default select example" onchange="this.form.submit()">
+                        <select name="from_loc" id="from_loc" class="form-select" aria-label="Default select example" onchange="this.form.submit()">
                             <option selected>Select Dining Location</option>
-                            <option {%if loc == "brittain"  %} selected {%endif%} value="brittain">Brittain</option>
-                            <option {%if loc == "north-ave-dining"  %} selected {%endif%} value="north-ave-dining">North Ave</option>
-                            <option {%if loc == "west-village"  %} selected {%endif%} value="west-village">Willage</option>
-                            <option {%if loc == "blue-donkeye"  %} selected {%endif%} value="blue-donkeye">Blue Donkey</option>
-                            <option {%if loc == "chick-fil-a"  %} selected {%endif%} value="chick-fil-a">Chick Fil A</option>
-                            <option {%if loc == "wing-zone"  %} selected {%endif%} value="wing-zone">Wing Zone</option>
-                            <option {%if loc == "kaldis-coffee"  %} selected {%endif%} value="kaldis-coffee">Kaldis Coffee</option>
-                            <option {%if loc == "panda-express"  %} selected {%endif%} value="panda-express">Panda Express</option>
-                            <option {%if loc == "ramblin-coffee-sweets"  %} selected {%endif%} value="ramblin-coffee-sweets">Ramblin Coffee Sweets</option>
-                            <option {%if loc == "rising-roll"  %} selected {%endif%} value="rising-roll">Rising Roll</option>
-                            <option {%if loc == "the-dive"  %} selected {%endif%} value="the-dive">The Dive</option>
-                            <option {%if loc == "twisted-taco"  %} selected {%endif%} value="twisted-taco">Twisted Taco</option>
+                            <option {%if from_loc == "brittain"  %} selected {%endif%} value="brittain">Brittain</option>
+                            <option {%if from_loc == "north-ave-dining"  %} selected {%endif%} value="north-ave-dining">North Ave</option>
+                            <option {%if from_loc == "west-village"  %} selected {%endif%} value="west-village">Willage</option>
+                            <option {%if from_loc == "blue-donkeye"  %} selected {%endif%} value="blue-donkeye">Blue Donkey</option>
+                            <option {%if from_loc == "chick-fil-a"  %} selected {%endif%} value="chick-fil-a">Chick Fil A</option>
+                            <option {%if from_loc == "kaldis-coffee"  %} selected {%endif%} value="kaldis-coffee">Kaldis Coffee</option>
+                            <option {%if from_loc == "panda-express"  %} selected {%endif%} value="panda-express">Panda Express</option>
+                            <option {%if from_loc == "ramblin-coffee-sweets"  %} selected {%endif%} value="ramblin-coffee-sweets">Ramblin Coffee Sweets</option>
+                            <option {%if from_loc == "rising-roll"  %} selected {%endif%} value="rising-roll">Rising Roll</option>
+                            <option {%if from_loc == "the-dive"  %} selected {%endif%} value="the-dive">The Dive</option>
+                            <option {%if from_loc == "twisted-taco"  %} selected {%endif%} value="twisted-taco">Twisted Taco</option>
+                            <option {%if from_loc == "wing-zone"  %} selected {%endif%} value="wing-zone">Wing Zone</option>
                         </select>
                     </form>
-
                     <br>
 
                     {%if foods|length > 0 %}
                         <form action="/order" method="post" id="food_form">
-                            <input type="hidden" name="loc" id="food_loc" value="{{loc}}">
+                            <input type="hidden" name="from_loc" id="food_loc" value="{{from_loc}}">
                             {%for food in foods%}
                                 <div class="form-check">
                                     <input name="{{food}}" id="{{food}}" class="form-check-input" type="checkbox">
@@ -64,13 +62,29 @@
                                 </div>
                             {%endfor%}
                             <br>
+                            <select name="to_loc" id="to_loc" class="form-select" aria-label="Default select example" required>
+                                <option selected disabled>Select Delivery Location</option>
+                                <option value="Cloudman">Cloudman</option>
+                                <option value="Culc">Culc</option>
+                                <option value="CRC">CRC</option>
+                                <option value="Hanson">Hanson</option>
+                                <option value="Harrison">Harrison</option>
+                                <option value="Hopkins">Hopkins</option>
+                                <option value="Howell">Howell</option>
+                                <option value="Inspire">Inspire</option>
+                                <option value="Klaus">Klaus</option>
+                                <option value="Matheson">Matheson</option>
+                                <option value="Smith">Smith</option>
+                                <option value="Towers">Towers</option>
+                            </select>
+                            <br>
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="btn btn-outline-dark btn-lg">Place Order</button>
                             </div>
                         </form>
                     {%else%}
                         <i>Select dining location to view food choices.</i>
-                    {%endif%}                        
+                    {%endif%}
                 </div>  
             </div>
         </div>

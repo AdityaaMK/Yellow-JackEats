@@ -27,3 +27,12 @@ body {
     margin: auto;
     text-align: center;
 }
+
+.filter_form .form-check-input:focus {
+    box-shadow: none;
+}
+
+.filter_form .dropdown-item:active {
+    color: #1e2125;
+    background-color: #e9ecef;
+}

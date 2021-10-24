@@ -16,13 +16,13 @@
                             <a class="nav-link" aria-current="page" href="/home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/order">Order</a>
+                            <a class="nav-link" href="/order">1. Order</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="/checkout">Checkout</a>
+                            <a class="nav-link active" href="/checkout">2. Checkout</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled">Details</a>
+                            <a class="nav-link disabled">3. Details</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/logout">Logout</a>
@@ -30,6 +30,16 @@
                     </ul>
                     <br>
                     <h1 class="card-title text-center"> Checkout! </h1>
+                    <br>
+                    <div class="card order-card">
+                        <div class="card-body">
+                            <h4 class="card-title text-center"> <b> {{orders.name}}'s order </b> </h4>
+                            <h4 class="card-title text-center"> {{orders.from_loc}} -> {{orders.to_loc}} </h4>
+                            <br>
+                            <p class="order-card-text text-center"> <b> Food List: </b> {%for i in range(orders.food|length-1)%} {{orders.food[i]}}, {%endfor%} {{orders.food[orders.food|length-1]}} </p>
+                            <p class="order-card-text text-center"> <b> Total Payment: </b> {{orders.payment}} </p>
+                        </div>
+                    </div>
                     <br>
                     <form action="/checkout" method="post">
                         <div class="d-flex justify-content-center">

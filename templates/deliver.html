@@ -16,13 +16,13 @@
                         <a class="nav-link" aria-current="page" href="/home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/deliver">Deliver</a>
+                        <a class="nav-link active" href="/deliver">1. Deliver</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled">Confirmation</a>
+                        <a class="nav-link disabled">2. Confirmation</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled">Details</a>
+                        <a class="nav-link disabled">3. Details</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">Logout</a>
@@ -30,82 +30,100 @@
                   </ul>
                   <br>
                   <h1 class="card-title text-center"> Deliver Food! </h1>
-                  <br>
-                  <form action='/deliver'; method="post">
-                      <div class="dropdown">
-                          <btn class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Filter Pickup Locations
-                          </btn>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item">
-                              <label class="container">One
-                                <input type="checkbox" checked="checked">
-                                <span class="checkmark"></span>
-                              </label>
-                            </a>
-                            <a class="dropdown-item">
-                              <label class="container">Two
-                                <input type="checkbox" checked="checked">
-                                <span class="checkmark"></span>
-                              </label>
-                            </a>
-                            <a class="dropdown-item">
-                              <label class="container">Three
-                                <input type="checkbox" checked="checked">
-                                <span class="checkmark"></span>
-                              </label>
-                            </a>
+                  <br>      
+                  
+                  <div class="row">
+                    <div class="col d-flex justify-content-center">
+                      <form action='/deliver' method="post" class="filter_form">
+                          <div class="dropdown">
+                              <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                Filter Pickup Locations
+                              </button>
+                              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <li class="dropdown-item">
+                                  <input class="form-check-input" type="checkbox" value="" id="checkbox1">
+                                  <label class="form-check-label" for="checkbox1"> Default checkbox </label>
+                                </li>
+                                <li class="dropdown-item">
+                                  <input class="form-check-input" type="checkbox" value="" id="checkbox2">
+                                  <label class="form-check-label" for="checkbox2"> Default checkbox 2</label>
+                                </li>
+                                <li class="dropdown-item">
+                                  <input class="form-check-input" type="checkbox" value="" id="checkbox3">
+                                  <label class="form-check-label" for="checkbox3"> Default checkbox 3</label>
+                                </li>
+                              </ul>
                           </div>
-                      </div>
-                      <br>
-                  </form>
-
-                  <div class="card mt-2 order-card">
-                    <div class="row g-0">
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h4 class="card-title order-card-title" style="display:inline-block"> Britain Dining Hall <h5 class = "order-card-subtitle"> (Shram) </h5></h4>
-                          <p class="order-card-text"> <b> Food: </b> Cheesecake, Ice Cream, Other Cheesecake, Pizza, Hamburger, Salad</p>
-                        </div>
-                      </div>
-
-                      <div class="col-md-4 align-self-center">
-                        <form action="/deliver" method="post">
-                          <div class="d-flex justify-content-center m-2">
-                              <button type="submit" class="btn btn-outline-dark btn-lg">Accept Delivery</button>
-                          </div>
-                        </form>
-                      </div>
-
+                          <br>
+                      </form>
                     </div>
+                    
+                    <div class="col d-flex justify-content-center">
+                      <form action='/deliver' method="post" class="filter_form">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                              Filter Dropoff Locations
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <li class="dropdown-item">
+                                <input class="form-check-input" type="checkbox" value="" id="checkbox2.1">
+                                <label class="form-check-label" for="checkbox2.1"> Default checkbox </label>
+                              </li>
+                              <li class="dropdown-item">
+                                <input class="form-check-input" type="checkbox" value="" id="checkbox2.2">
+                                <label class="form-check-label" for="checkbox2.2"> Default checkbox 2</label>
+                              </li>
+                              <li class="dropdown-item">
+                                <input class="form-check-input" type="checkbox" value="" id="checkbox2.3">
+                                <label class="form-check-label" for="checkbox2.3"> Default checkbox 3</label>
+                              </li>
+                            </ul>
+                        </div>
+                        <br>
+                      </form>
                   </div>
 
-                  <div class="card mt-2 order-card">
-                    <div class="row g-0">
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h4 class="card-title order-card-title" style="display:inline-block"> Whole Foods <h5 class = "order-card-subtitle"> (Sreeram) </h5></h4>
-                        <p class="order-card-text"> <b> Food: </b> Who Knows </p>
+                  {%if orders|length > 0 %}
+                    {%for order in orders%}
+                      <div class="card mt-2 order-card">
+                        <div class="row g-0">
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title order-card-title" style="display:inline-block"> {{order.from_loc}} -> {{order.to_loc}} </h5>
+                              <p class="order-card-text"> <b> Food: </b> {%for i in range(order.food|length-1)%} {{order.food[i]}}, {%endfor%} {{order.food[order.food|length-1]}} </p>
+                              <p class="order-card-text"> <b> Payment: </b> {{order.payment}} </p>
+                            </div>
+                          </div>
+
+                          <div class="col-md-4 align-self-center">
+                            <form action="/confirmation" method="post">
+                              <input type="hidden" name="email" id="email" value="{{order.email}}">
+                              <div class="d-flex justify-content-center m-2">
+                                  <button type="submit" class="btn btn-outline-dark btn-lg">Accept Delivery</button>
+                              </div>
+                            </form>
+                          </div>
+
                         </div>
                       </div>
-
-                      <div class="col-md-4 align-self-center">
-                        <form action="/deliver" method="post">
-                          <div class="d-flex justify-content-center m-2">
-                              <button type="submit" class="btn btn-outline-dark btn-lg">Accept Delivery</button>
-                          </div>
-                        </form>
-                      </div>
-
-                    </div>
-                  </div>             
+                    {%endfor%}  
+                  {%else%}
+                    <i>There are no orders right now :(</i>
+                  {%endif%}                   
+                  
                 </div>
             </div>
         </div>
     </div>
 
-
     <!-- JavaScript Imports -->
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <script>
+      $('.dropdown-menu').click(function(e) {
+        e.stopPropagation();
+      });
+    </script>
 </body>
 </html> 
