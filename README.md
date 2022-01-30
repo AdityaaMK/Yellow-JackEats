@@ -1,4 +1,4 @@
-# Yellow-Jackeats
+# Yellow JackEats
 
 ## Inspiration
 
