@@ -11,7 +11,7 @@ from send_sms import sendMessage
 
 app = Flask(__name__)
 app.secret_key = "top secret"
-# users is the name of table we are referencing 
+# users is the name of table we are referencing
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
